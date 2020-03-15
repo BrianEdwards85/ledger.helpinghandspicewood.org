@@ -22,6 +22,7 @@
 
     [yada "1.2.15.1"]
     [yada/aleph "1.2.15.1"]
+    [hiccup "1.0.5"]
     [com.walmartlabs/lacinia "0.36.0"]
 
     [buddy/buddy-core "1.6.0"]

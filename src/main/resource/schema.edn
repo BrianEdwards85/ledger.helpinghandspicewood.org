@@ -1,0 +1,17 @@
+{:objects
+    {:User
+        {:description "A user"
+         :fields
+            {:id {:type (non-null String)}
+             :name {:type (non-null String)}
+            :email {:type (non-null (list String))}
+            }
+        }
+    }
+
+ :queries
+    {:current_user
+        {:type :User
+         :description "Get current user"
+         :resolve :user/current-user}}
+}

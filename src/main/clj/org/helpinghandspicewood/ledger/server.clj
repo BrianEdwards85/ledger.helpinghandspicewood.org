@@ -3,11 +3,11 @@
             [clojure.tools.logging :as log]
             [com.stuartsierra.component :as component]))
 
-(defrecord Server [handler conf server]
+(defrecord Server [handler port server]
   component/Lifecycle
 
   (start [this]
-    (let [port (or (-> conf :port) 8080)
+    (let [port (or (:port this) 8080)
           routes (-> handler :routes)
           s (yada/listener routes {:port port})]
       (do
@@ -23,5 +23,5 @@
 
 (defn new-server [conf]
   (component/using
-   (map->Server {:conf conf})
-   [:handler]))
+    (map->Server (select-keys conf [:port]))
+    [:handler]))

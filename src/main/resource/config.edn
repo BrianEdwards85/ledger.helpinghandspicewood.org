@@ -1,3 +1,4 @@
 {
   :port 8080
+  :jwks-url "https://edwardstx.auth0.com/.well-known/jwks.json"
 }

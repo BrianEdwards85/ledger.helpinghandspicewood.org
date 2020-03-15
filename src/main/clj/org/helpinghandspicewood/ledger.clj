@@ -1,16 +1,21 @@
 (ns org.helpinghandspicewood.ledger
     (:require [config.core :refer [env]]
       [clojure.tools.logging :as log]
-      [com.stuartsierra.component :as component]
       [manifold.deferred :as d]
       [org.helpinghandspicewood.ledger.handler :refer [new-handler]]
-      [org.helpinghandspicewood.ledger.server :refer [new-server]])
+      [org.helpinghandspicewood.ledger.server :refer [new-server]]
+      [org.helpinghandspicewood.ledger.graphql :refer [new-graphql]]
+      [org.helpinghandspicewood.ledger.keys :refer [new-keys]]
+      [com.stuartsierra.component :as component]
+      )
   (:gen-class))
 
 (defonce system (atom {}))
 
 (defn init-system [env]
   (component/system-map
+    :keys (new-keys env)
+    :graphql (new-graphql)
     :handler (new-handler)
     :server (new-server env)))
 

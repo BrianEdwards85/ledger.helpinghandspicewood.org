@@ -9,17 +9,17 @@
     (:import [org.flywaydb.core
               Flyway]))
 
-  (defprotocol DBConnection
+(defprotocol DBConnection
     (get-connection [this]))
 
-  (s/def ::db #(satisfies? DBConnection %))
-  (s/def ::db-url ::specs/non-empty-string)
-  (s/def ::db-user ::specs/non-empty-string)
-  (s/def ::db-password ::specs/non-empty-string)
-  (s/def ::db-pool-size ::specs/positive-int)
-  (s/def ::db-env (s/keys :req-un [::db-url ::db-user ::db-password] :opt-un [::db-pool-size]))
+(s/def ::db #(satisfies? DBConnection %))
+(s/def ::db-url ::specs/non-empty-string)
+(s/def ::db-user ::specs/non-empty-string)
+(s/def ::db-password ::specs/non-empty-string)
+(s/def ::db-pool-size ::specs/positive-int)
+(s/def ::db-env (s/keys :req-un [::db-url ::db-user ::db-password] :opt-un [::db-pool-size]))
 
-  (defrecord Database [schema db-conf datasource]
+(defrecord Database [schema db-conf datasource]
     component/Lifecycle
 
     (start [this]
@@ -41,12 +41,12 @@
     DBConnection
 
     (get-connection [this] (select-keys this [:datasource]))
-  )
+)
 
-  (defn new-database [schema {:keys [db-url db-user db-password db-pool-size] :as env}]
+(defn new-database [schema {:keys [db-url db-user db-password db-pool-size] :as env}]
     {:pre [(s/valid? ::db-env env)
            (s/valid? ::specs/non-empty-string schema)]}
     (map->Database {:schema schema :db-conf {:username db-user :password db-password :jdbc-url db-url :minimum-idle (or db-pool-size 3)}}))
 
-  (defn def-db-fns [f]
+(defn def-db-fns [f]
     (hugsql/def-db-fns f {:adapter (adapter/hugsql-adapter-clojure-java-jdbc)}))
