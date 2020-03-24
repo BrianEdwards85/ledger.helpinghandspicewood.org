@@ -11,8 +11,7 @@
                     :resolve :user/emails}
                 :permissions {
                     :type (non-null (list String))
-                    :resolve :user/permissions
-                }
+                    :resolve :user/permissions}
             }
         }
     }

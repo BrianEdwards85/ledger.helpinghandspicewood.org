@@ -19,10 +19,10 @@
             #(resolve/deliver! result nil %))
         result))
 
-(defn user-permissions [{:keys [db]} context variables {:keys [id]}]
+(defn user-permissions [{:keys [db]} context variables {:keys [email]}]
     (let [result (resolve/resolve-promise)]
         (d/on-realized
-            (users/get-user-permissions db id)
+            (users/get-user-permissions db email)
             #(resolve/deliver! result %)
             #(resolve/deliver! result nil %))
         result))
@@ -30,7 +30,9 @@
 (defn resolver-map [system]
     {
         :user/current current-user
-        :user/emails (partial user-emails system)})
+        :user/emails (partial user-emails system)
+        :user/permissions (partial user-permissions system)
+        })
 
 
 (defn load-schema [system]
@@ -38,5 +40,4 @@
         slurp
         edn/read-string
         (util/attach-resolvers (resolver-map system))
-        schema/compile
-        ))
+        schema/compile))
