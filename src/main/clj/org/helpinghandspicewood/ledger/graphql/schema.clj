@@ -1,22 +1,42 @@
 (ns org.helpinghandspicewood.ledger.graphql.schema
     (:require
         [clojure.java.io :as io]
+        [manifold.deferred :as d]
+        [org.helpinghandspicewood.ledger.db.users :as users]
         [com.walmartlabs.lacinia.util :as util]
         [com.walmartlabs.lacinia.schema :as schema]
+        [com.walmartlabs.lacinia.resolve :as resolve]
         [clojure.edn :as edn]))
 
-(defn resolver-map []
-    {:user/current-user (fn [c a v]
-        (hash-map
-            :id "a9f05001-f609-45e5-b532-04cf75e8c8ae"
-            :name "Brian Edwards"
-            :email (list "brian@edwardstx.us")))})
+(defn current-user [context variables value]
+    (:user context))
+
+(defn user-emails [{:keys [db]} context variables {:keys [id]}]
+    (let [result (resolve/resolve-promise)]
+        (d/on-realized
+            (users/get-user-emails db id)
+            #(resolve/deliver! result (map :email %))
+            #(resolve/deliver! result nil %))
+        result))
+
+(defn user-permissions [{:keys [db]} context variables {:keys [id]}]
+    (let [result (resolve/resolve-promise)]
+        (d/on-realized
+            (users/get-user-permissions db id)
+            #(resolve/deliver! result %)
+            #(resolve/deliver! result nil %))
+        result))
+
+(defn resolver-map [system]
+    {
+        :user/current current-user
+        :user/emails (partial user-emails system)})
 
 
-(defn load-schema []
+(defn load-schema [system]
     (-> (io/resource "schema.edn")
         slurp
         edn/read-string
-        (util/attach-resolvers (resolver-map))
+        (util/attach-resolvers (resolver-map system))
         schema/compile
         ))

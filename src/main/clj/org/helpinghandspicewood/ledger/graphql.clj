@@ -4,17 +4,19 @@
         [com.stuartsierra.component :as component]
         [com.walmartlabs.lacinia :as lacinia]))
 
-(defn q [{:keys [schema]} query]
-    (lacinia/execute schema query nil nil))
+(defn q [{:keys [schema]} {:keys [query variables]} ctx]
+    (lacinia/execute schema query variables (select-keys ctx [:user :permissions])))
 
-(defrecord GraphQL [schema]
+(defrecord GraphQL [schema db]
     component/Lifecycle
 
     (start [this]
-        (assoc this :schema (schema/load-schema)))
+        (assoc this :schema (schema/load-schema this)))
 
     (stop [this]
         (assoc this :schema nil)))
 
 (defn new-graphql []
-    (map->GraphQL {}))
+    (component/using
+        (map->GraphQL {})
+        [:db]))

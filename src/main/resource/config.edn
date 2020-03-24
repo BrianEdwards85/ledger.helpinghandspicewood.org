@@ -1,4 +1,7 @@
 {
   :port 8080
   :jwks-url "https://edwardstx.auth0.com/.well-known/jwks.json"
+  :db-url "jdbc:postgresql://localhost:5432/ledger"
+  :db-user "ledger"
+  :db-password "ledger"
 }

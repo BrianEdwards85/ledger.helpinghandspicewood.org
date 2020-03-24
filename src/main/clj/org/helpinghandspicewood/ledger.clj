@@ -6,6 +6,7 @@
       [org.helpinghandspicewood.ledger.server :refer [new-server]]
       [org.helpinghandspicewood.ledger.graphql :refer [new-graphql]]
       [org.helpinghandspicewood.ledger.keys :refer [new-keys]]
+      [org.helpinghandspicewood.ledger.db :refer [new-db]]
       [com.stuartsierra.component :as component]
       )
   (:gen-class))
@@ -14,6 +15,7 @@
 
 (defn init-system [env]
   (component/system-map
+    :db (new-db "ledger" env)
     :keys (new-keys env)
     :graphql (new-graphql)
     :handler (new-handler)

@@ -1,17 +1,27 @@
-{:objects
-    {:User
-        {:description "A user"
-         :fields
-            {:id {:type (non-null String)}
-             :name {:type (non-null String)}
-            :email {:type (non-null (list String))}
+{
+    :objects {
+        :User {
+            :description "A user"
+            :fields {
+                :id {:type (non-null String)}
+                :name {:type (non-null String)}
+                :email {:type (non-null String)}
+                :emails {
+                    :type (non-null (list String))
+                    :resolve :user/emails}
+                :permissions {
+                    :type (non-null (list String))
+                    :resolve :user/permissions
+                }
             }
         }
     }
 
- :queries
-    {:current_user
-        {:type :User
-         :description "Get current user"
-         :resolve :user/current-user}}
+    :queries {
+        :current_user {
+            :type :User
+            :description "Get current user"
+            :resolve :user/current
+        }
+    }
 }

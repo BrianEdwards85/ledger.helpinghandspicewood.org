@@ -1,5 +1,6 @@
 (ns org.helpinghandspicewood.ledger.authentication
     (:require
+        [org.helpinghandspicewood.ledger.db.users :as users]
         [aleph.http :as http]
         [manifold.deferred :as d]
         [cheshire.core :as json]
@@ -19,15 +20,20 @@
 (defn unsign-all [{:keys [keys]} access_token]
     (first (filter some? (map (partial unsign access_token) keys))))
 
-(defn authorized [keys handler no-auth]
+(defn authorized [{:keys [keys db]} handler no-auth]
     (fn [ctx]
         (if-let [access_token (get-in ctx [:cookies "access_token"])]
             (if-let [cred (unsign-all keys access_token)]
-                (handler (assoc ctx :token cred))
-                (no-auth ctx)
-                )
-            (no-auth ctx)
-        )))
+                    (d/chain
+                        (d/zip
+                            (users/get-user-by-email db (:email cred))
+                            (users/get-user-permissions db (:email cred)))
+                        (fn [[user permissions]]
+                            (if (some? user)
+                                (handler (assoc ctx :token cred :user user :permissions permissions))
+                                (no-auth ctx))))
+            (no-auth ctx))
+        (no-auth ctx))))
 
 (def redirect_url
     (str

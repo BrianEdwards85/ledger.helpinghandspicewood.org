@@ -23,27 +23,29 @@
     component/Lifecycle
 
     (start [this]
-      (do
-        (log/info "Connecting to DB")
-        (let [ds (make-datasource db-conf)
-              flyway (Flyway.)]
-          (log/info "Connected to DB, starting migration")
-          (.setSchemas flyway (into-array [schema]))
-          (.setDataSource flyway ds)
-          (.migrate flyway)
-          (log/info "Migration complete")
-          (assoc this :datasource ds))))
+        (do
+            (log/info "Connecting to DB")
+            (let [ds (make-datasource db-conf)]
+            (log/info "Connected to DB, starting migration")
+            (-> (Flyway/configure)
+                (.schemas (into-array [schema]))
+                (.defaultSchema schema)
+                (.dataSource ds)
+                (.load)
+                (.migrate))
+            (log/info "Migration complete")
+            (assoc this :datasource ds))))
 
     (stop [this]
-      (close-datasource datasource)
-      (assoc this :datasource nil))
+        (close-datasource datasource)
+        (assoc this :datasource nil))
 
     DBConnection
 
     (get-connection [this] (select-keys this [:datasource]))
 )
 
-(defn new-database [schema {:keys [db-url db-user db-password db-pool-size] :as env}]
+(defn new-db [schema {:keys [db-url db-user db-password db-pool-size] :as env}]
     {:pre [(s/valid? ::db-env env)
            (s/valid? ::specs/non-empty-string schema)]}
     (map->Database {:schema schema :db-conf {:username db-user :password db-password :jdbc-url db-url :minimum-idle (or db-pool-size 3)}}))
