@@ -32,6 +32,7 @@
         :user/current current-user
         :user/emails (partial user-emails system)
         :user/permissions (partial user-permissions system)
+        :user/added_by (constantly "x")
         })
 
 

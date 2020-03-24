@@ -9,19 +9,19 @@
 
 (defn get-user-by-email [db email]
     {:pre [(s/valid? ::db/db db)
-            (s/valid? ::specs/non-empty-string email)]}
+           (s/valid? ::specs/non-empty-string email)]}
     (d/future
         (get-user-by-email-sql (get-connection db) {:email email})))
 
 (defn get-user-emails [db user-id]
     {:pre [(s/valid? ::db/db db)
-            (s/valid? ::specs/non-empty-string user-id)]}
+           (s/valid? ::specs/non-empty-string user-id)]}
     (d/future
         (get-user-emails-sql (get-connection db) {:user_id user-id})))
 
 (defn get-user-permissions [db email]
     {:pre [(s/valid? ::db/db db)
-            (s/valid? ::specs/non-empty-string email)]}
+           (s/valid? ::specs/non-empty-string email)]}
     (d/future
         (set
             (map :permission_id

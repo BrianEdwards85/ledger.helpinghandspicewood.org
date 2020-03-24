@@ -30,7 +30,7 @@
                             (users/get-user-permissions db (:email cred)))
                         (fn [[user permissions]]
                             (if (some? user)
-                                (handler (assoc ctx :token cred :user user :permissions permissions))
+                                (handler (assoc ctx :token cred :user (assoc user :permissions permissions)))
                                 (no-auth ctx))))
             (no-auth ctx))
         (no-auth ctx))))

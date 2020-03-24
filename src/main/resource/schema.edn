@@ -1,7 +1,7 @@
 {
     :objects {
         :User {
-            :description "A user"
+            :description "User"
             :fields {
                 :id {:type (non-null String)}
                 :name {:type (non-null String)}
@@ -12,6 +12,17 @@
                 :permissions {
                     :type (non-null (list String))
                     :resolve :user/permissions}
+            }
+        }
+        :Client {
+            :description "Client"
+            :fields {
+                :id {:type (non-null String)}
+                :name {:type (non-null String)}
+                :added_by {
+                    :type (non-null :User)
+                    :resolve :user/added_by
+                }
             }
         }
     }

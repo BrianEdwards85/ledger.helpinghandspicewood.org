@@ -5,7 +5,7 @@
         [com.walmartlabs.lacinia :as lacinia]))
 
 (defn q [{:keys [schema]} {:keys [query variables]} ctx]
-    (lacinia/execute schema query variables (select-keys ctx [:user :permissions])))
+    (lacinia/execute schema query variables (select-keys ctx [:user])))
 
 (defrecord GraphQL [schema db]
     component/Lifecycle

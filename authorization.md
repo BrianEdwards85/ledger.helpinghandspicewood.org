@@ -24,3 +24,9 @@
 * permission.get_all
 * permission.add
 * permission.update
+
+## Clients
+* client.list
+* client.add
+* client.remove
+* client.update
