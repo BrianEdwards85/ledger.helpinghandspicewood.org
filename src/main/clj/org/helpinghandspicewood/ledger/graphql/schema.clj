@@ -3,6 +3,7 @@
         [clojure.java.io :as io]
         [manifold.deferred :as d]
         [org.helpinghandspicewood.ledger.db.users :as users]
+        [org.helpinghandspicewood.ledger.orchestrator.clients :as clients]
         [com.walmartlabs.lacinia.util :as util]
         [com.walmartlabs.lacinia.schema :as schema]
         [com.walmartlabs.lacinia.resolve :as resolve]
@@ -27,12 +28,22 @@
             #(resolve/deliver! result nil %))
         result))
 
+(defn resolve [system resolver]
+    (fn [context variables value]
+        (let [result (resolve/resolve-promise)]
+            (d/on-realized
+                (resolver (merge system context {:variables variables :value value}))
+                #(resolve/deliver! result %)
+                #(resolve/deliver! result nil %))
+            result)))
+
 (defn resolver-map [system]
     {
         :user/current current-user
         :user/emails (partial user-emails system)
         :user/permissions (partial user-permissions system)
         :user/added_by (constantly "x")
+        :client/all (resolve system (fn [{:keys [db user]}] (clients/get-all-clients db user)))
         })
 
 

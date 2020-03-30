@@ -11,7 +11,7 @@
 (s/def ::added_by ::specs/non-empty-string)
 (s/def ::client (s/keys :req-un [::id ::name ::added_by]))
 
-(def-db-fns "db/sql/users.sql")
+(def-db-fns "db/sql/clients.sql")
 
 (defn uuid [] (str (java.util.UUID/randomUUID)))
 

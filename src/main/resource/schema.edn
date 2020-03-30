@@ -33,5 +33,10 @@
             :description "Get current user"
             :resolve :user/current
         }
+        :clients {
+            :type (list :Client)
+            :description "Get all users"
+            :resolve :client/all
+        }
     }
 }
