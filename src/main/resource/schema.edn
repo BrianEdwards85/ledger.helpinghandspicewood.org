@@ -39,4 +39,14 @@
             :resolve :client/all
         }
     }
+    :mutations {
+        :add_client {
+            :type String
+            :description "Add client"
+            :args {
+                :name {:type (non-null String)}
+            }
+            :resolve :client/add
+        }
+    }
 }

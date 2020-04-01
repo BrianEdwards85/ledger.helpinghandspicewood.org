@@ -24,3 +24,9 @@ JOIN ledger.user_emails on user_roles.user_id = user_emails.user_id
 WHERE user_roles.enabled
   AND role_permissions.enabled
   AND user_emails.email = :email
+
+-- :name get-user-by-id-sql :? :1
+SELECT users.id, users.name, users.added_on, users.added_by, user_emails.email
+FROM ledger.users
+JOIN ledger.user_emails ON users.id = user_emails.user_id AND user_emails.principal
+WHERE user_emails.id = :id

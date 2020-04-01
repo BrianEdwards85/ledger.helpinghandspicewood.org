@@ -9,7 +9,7 @@
 (s/def ::id ::specs/non-empty-string)
 (s/def ::name ::specs/non-empty-string)
 (s/def ::added_by ::specs/non-empty-string)
-(s/def ::client (s/keys :req-un [::id ::name ::added_by]))
+(s/def ::client (s/keys :req-un [::name ::added_by]))
 
 (def-db-fns "db/sql/clients.sql")
 
@@ -25,5 +25,5 @@
            (s/valid? ::client client)]}
     (let [id (uuid)]
         (d/chain
-            (d/future (add-client-sql (get-connection db) (assoc client :id id)))
+            (d/future (add-client-sql (get-connection db) (assoc client :client_id id)))
             (fn [& args] id))))

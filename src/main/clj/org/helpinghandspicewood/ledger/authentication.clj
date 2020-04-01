@@ -81,7 +81,7 @@
     (let [{:keys [code state]} (get-in ctx [:parameters :query])]
     (d/chain
         (exchange-token code)
-        #(do (println %1) %1)
+;;        #(do (println %1) %1)
         #(assoc
             (:response ctx)
             :status 302

@@ -28,3 +28,9 @@
                 (get-user-permissions-by-email-sql
                     (get-connection db)
                      {:email email})))))
+
+(defn get-user-by-id [db id]
+    {:pre [(s/valid? ::db/db db)
+           (s/valid? ::specs/non-empty-string id)]}
+    (d/future
+        (get-user-by-email-sql (get-connection db) {:id id})))

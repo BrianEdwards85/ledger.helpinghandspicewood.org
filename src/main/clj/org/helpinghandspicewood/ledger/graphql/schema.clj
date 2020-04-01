@@ -44,6 +44,7 @@
         :user/permissions (partial user-permissions system)
         :user/added_by (constantly "x")
         :client/all (resolve system (fn [{:keys [db user]}] (clients/get-all-clients db user)))
+        :client/add (resolve system (fn [{:keys [db user variables]}] (clients/add-client db user variables)))
         })
 
 
