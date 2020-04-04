@@ -29,4 +29,4 @@ WHERE user_roles.enabled
 SELECT users.id, users.name, users.added_on, users.added_by, user_emails.email
 FROM ledger.users
 JOIN ledger.user_emails ON users.id = user_emails.user_id AND user_emails.principal
-WHERE user_emails.id = :id
+WHERE users.id = :id

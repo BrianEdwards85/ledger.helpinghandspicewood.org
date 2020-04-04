@@ -52,3 +52,13 @@
 
 (defn def-db-fns [f]
     (hugsql/def-db-fns f {:adapter (adapter/hugsql-adapter-clojure-java-jdbc)}))
+
+(defn timestamp->instant [e]
+    (apply
+        hash-map
+        (mapcat
+            (fn [[k v]]
+                (if (instance? java.sql.Timestamp v)
+                    [k (.toInstant v)]
+                    [k v]))
+            e)))

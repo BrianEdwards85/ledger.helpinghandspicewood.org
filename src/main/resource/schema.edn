@@ -1,4 +1,10 @@
 {
+    :scalars {
+        :Date {
+            :parse :date/parse
+            :serialize :date/serialize
+        }
+    }
     :objects {
         :User {
             :description "User"
@@ -12,6 +18,7 @@
                 :permissions {
                     :type (non-null (list String))
                     :resolve :user/permissions}
+                :added_on {:type (non-null :Date)}
             }
         }
         :Client {
@@ -19,10 +26,35 @@
             :fields {
                 :id {:type (non-null String)}
                 :name {:type (non-null String)}
+                :family {:type (non-null Int)}
                 :added_by {
                     :type (non-null :User)
                     :resolve :user/added_by
                 }
+                :added_on {:type (non-null :Date)}
+                :entries {
+                    :type (list :Entry)
+                    :resolve :entry/for-client
+                }
+            }
+        }
+        :Entry {
+            :description "Visit Entry"
+            :fields {
+                :id {:type (non-null String)}
+                :group {:type (non-null String)}
+                :client {
+                    :type (non-null :Client)
+                    :resolve :client/for-entry
+                }
+                :effective_date {:type (non-null :Date)}
+                :current {:type (non-null Boolean)}
+                :food {:type (non-null Boolean)}
+                :added_by {
+                    :type (non-null :User)
+                    :resolve :user/added_by
+                }
+                :added_on {:type (non-null :Date)}
             }
         }
     }
@@ -37,6 +69,9 @@
             :type (list :Client)
             :description "Get all users"
             :resolve :client/all
+            :args {
+                :ids {:type (list String)}
+            }
         }
     }
     :mutations {

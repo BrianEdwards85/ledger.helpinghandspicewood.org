@@ -30,3 +30,11 @@
 * client.add
 * client.remove
 * client.update
+
+## Entries
+* entries.list
+* entries.add
+* entries.remove
+* entries.remove.all
+* entries.update
+* entires.update.all

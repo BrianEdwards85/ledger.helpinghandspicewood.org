@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   entry: path.join(__dirname, 'src', 'main', 'js', 'app.jsx'),
   output: {
-    path: path.join(__dirname, 'src', 'main', 'resources', 'public', 'js'),
+    path: path.join(__dirname, 'src', 'main', 'resource', 'public', 'js'),
     filename: 'main.js',
   },
   mode: 'development',
@@ -16,11 +16,9 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         include: [
-          path.join(__dirname, 'src', 'js'),
+          path.join(__dirname, 'src', 'main', 'js'),
         ],
-        use: {
-          loader: 'babel-loader',
-        },
+        loader: 'babel-loader',
       },
       {
         test: /\.s[ac]ss$/i,

@@ -8,8 +8,10 @@
             [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
             [:title "Ledger"]]
 
-        [:body
-            [:div#root ]
+        [:body.bp3-dark
+            [:div#page-container
+                [:div#root ]
+            ]
             (include-js "/assets/js/main.js")
         ]))
 

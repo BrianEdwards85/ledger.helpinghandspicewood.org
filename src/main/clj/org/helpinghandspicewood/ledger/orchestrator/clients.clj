@@ -3,9 +3,11 @@
         [manifold.deferred :as d]
         [org.helpinghandspicewood.ledger.db.clients :as clients-db]))
 
-(defn get-all-clients [db {:keys [permissions]}]
+(defn get-clients [db {:keys [permissions]} ids]
     (if (some? (permissions "client.list"))
-        (clients-db/get-all-clients db)
+        (if (empty? ids)
+            (clients-db/get-all-clients db)
+            (clients-db/get-clients db ids))
         (d/error-deferred (Exception. "User does not have permission to get clients"))))
 
 (defn add-client [db {:keys [id permissions]} client]
