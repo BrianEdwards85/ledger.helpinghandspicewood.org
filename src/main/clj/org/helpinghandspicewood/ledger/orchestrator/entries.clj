@@ -1,12 +1,7 @@
 (ns org.helpinghandspicewood.ledger.orchestrator.entries
   (:require
-    [manifold.deferred :as d]
+    [org.helpinghandspicewood.ledger.orchestrator.utils :refer [check-permissions]]
     [org.helpinghandspicewood.ledger.db.entries :as entries-db]))
-
-(defn check-permissions [permissions permission f]
-  (if (some? (permissions permission))
-    (f)
-        (d/error-deferred (Exception. (str "User does not have " permission)))))
 
 (defn get-client-entries
   ([db user client] (get-client-entries db user client false))

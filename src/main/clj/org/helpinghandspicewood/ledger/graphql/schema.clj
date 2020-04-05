@@ -5,6 +5,7 @@
     [org.helpinghandspicewood.ledger.db.users :as users]
     [org.helpinghandspicewood.ledger.orchestrator.clients :as clients]
     [org.helpinghandspicewood.ledger.orchestrator.entries :as entries]
+    [org.helpinghandspicewood.ledger.orchestrator.categories :as categories]
     [com.walmartlabs.lacinia.util :as util]
     [com.walmartlabs.lacinia.schema :as schema]
     [com.walmartlabs.lacinia.resolve :as resolve]
@@ -70,16 +71,18 @@
     first))
 
 (defn resolver-map [system]
-  {
-    :user/current current-user
+  (let [resolve (partial resolve system)]
+  { :user/current current-user
     :user/emails (partial user-emails system)
     :user/permissions (partial user-permissions system)
-    :user/added_by (resolve system (fn [{:keys [db value]}] (users/get-user-by-id db (:added_by value))))
-    :client/all (resolve system (fn [{:keys [db user variables]}] (clients/get-clients db user (:ids variables))))
-    :client/add (resolve system (fn [{:keys [db user variables]}] (clients/add-client db user variables)))
-    :client/for-entry (resolve system client-for-entry)
-    :entry/for-client (resolve system (fn [{:keys [db user value]}] (entries/get-client-entries db user (:id value))))
-    })
+    :user/added_by (resolve (fn [{:keys [db value]}] (users/get-user-by-id db (:added_by value))))
+    :client/all (resolve (fn [{:keys [db user variables]}] (clients/get-clients db user (:ids variables))))
+    :client/add (resolve (fn [{:keys [db user variables]}] (clients/add-client db user variables)))
+    :client/for-entry (resolve client-for-entry)
+    :entry/for-client (resolve (fn [{:keys [db user value]}] (entries/get-client-entries db user (:id value))))
+    :category/get (resolve (fn [{:keys [db user variables]}] (categories/get-categories db user (-> variables :archived true?))))
+    :category/upsert (resolve (fn [{:keys [db user variables]}] (categories/upsert-category db user variables)))
+    }))
 
 
 (defn load-schema [system]
