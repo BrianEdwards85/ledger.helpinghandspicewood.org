@@ -1,0 +1,27 @@
+import React from 'react';
+import {useQuery, useMutation} from '@apollo/react-hooks';
+import {Spinner} from '@blueprintjs/core';
+import {ALL_CATEGORIES, UPSERT_CATEGORIES} from '../../gql';
+import CategoriesDisplay from './CategoriesDisplay';
+
+const Categories = () => {
+  const {loading, error, data, refetch} = useQuery(ALL_CATEGORIES);
+  const [upsertCategoryGql, {d}] = useMutation(
+      UPSERT_CATEGORIES,
+      {onCompleted: refetch});
+
+  const upsertCategory = (id, description) =>
+    upsertCategoryGql({variables: {id, description}});
+
+  if (loading) return <Spinner size="125"/>;
+  if (error) return <p>Error :(</p>;
+
+  const props = {
+    ...data,
+    upsertCategory,
+  };
+
+  return <CategoriesDisplay {...props}/>;
+};
+
+export default Categories;

@@ -5,10 +5,8 @@ import ApolloClient from 'apollo-boost';
 import {ApolloProvider} from '@apollo/react-hooks';
 
 const client = new ApolloClient({
-  uri: '/graphql'
+  uri: '/graphql',
 });
-
-console.log('Hello world?');
 
 const App = () => (
   <ApolloProvider client={client}>

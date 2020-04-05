@@ -38,3 +38,9 @@
 * entries.remove.all
 * entries.update
 * entires.update.all
+
+## Categories
+* categories.list
+* categories.add
+* categories.remove
+* categories.update

@@ -14,13 +14,14 @@ const filterClients = (clients, filter) => {
     return clients;
   }
   const lowerFilter = filter.toLowerCase();
-  return _.filter(clients, (client) => client.name.toLowerCase().includes(lowerFilter));
+  return _.filter(clients, (client) =>
+    client.name.toLowerCase().includes(lowerFilter));
 };
 
 const ClientRow = ({client}) => (
   <tr key={client.id} onClick={() => console.log('ID: ' + client.id)}>
     <td>{client.name}</td>
-    <td>4</td>
+    <td>{client.family}</td>
   </tr>
 );
 

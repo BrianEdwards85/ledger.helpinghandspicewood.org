@@ -11,4 +11,4 @@ pom.xml.asc
 .hgignore
 .hg/
 node_modules
-/src/main/resource/public/js/main.js
+src/main/resource/public/js/main.js

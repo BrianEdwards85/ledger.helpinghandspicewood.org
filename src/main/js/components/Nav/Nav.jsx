@@ -12,8 +12,9 @@ const Nav = ({user}) => {
       <Navbar.Group align={Alignment.LEFT}>
         <Navbar.Heading>Helping Hands</Navbar.Heading>
         <Navbar.Divider />
-        <Button className="bp3-minimal" icon="home" text="Home" onClick={handleClick} />
-        <Button className="bp3-minimal" icon="document" text="Files" />
+        <Button className="bp3-minimal" text="Clients" onClick={handleClick} />
+        <Button className="bp3-minimal" text="Categories" />
+        <Button className="bp3-minimal" text="Users" />
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
         <Navbar.Divider />
