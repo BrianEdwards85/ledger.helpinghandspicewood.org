@@ -2,6 +2,7 @@
     (:require
         [manifold.deferred :as d]
         [clojure.spec.alpha :as s]
+        [org.helpinghandspicewood.ledger.uuid :refer [uuid]]
         [org.helpinghandspicewood.ledger.spec :as specs]
         [org.helpinghandspicewood.ledger.db :refer [get-connection def-db-fns timestamp->instant] :as db]))
 
@@ -13,8 +14,6 @@
 (s/def ::client (s/keys :req-un [::name ::added_by ::family]))
 
 (def-db-fns "db/sql/clients.sql")
-
-(defn uuid [] (str (java.util.UUID/randomUUID)))
 
 (defn get-clients [db ids]
     {:pre [(s/valid? ::db/db db)]}

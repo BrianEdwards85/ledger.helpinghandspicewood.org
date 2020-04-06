@@ -82,6 +82,8 @@
     :entry/for-client (resolve (fn [{:keys [db user value]}] (entries/get-client-entries db user (:id value))))
     :category/get (resolve (fn [{:keys [db user variables]}] (categories/get-categories db user (-> variables :archived true?))))
     :category/upsert (resolve (fn [{:keys [db user variables]}] (categories/upsert-category db user variables)))
+    :category/remove (resolve (fn [{:keys [db user variables]}] (categories/archive-category db user (:id variables))))
+    :entry/add (resolve (fn [{:keys [db user variables]}] (entries/add-entry db user variables)))
     }))
 
 

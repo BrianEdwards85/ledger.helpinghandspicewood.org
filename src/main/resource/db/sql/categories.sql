@@ -9,3 +9,9 @@ INSERT INTO ledger.categories (category_id, description, added_by)
 VALUES (:id, :description, :added_by)
 ON CONFLICT (category_id) DO UPDATE
 SET description = :description, removed_by = NULL, removed_on = NULL
+
+-- :name archive-category-sql :! :N
+UPDATE ledger.categories
+SET removed_by = :removed_by, removed_on = now()
+WHERE category_id = :category_id
+AND removed_by IS NULL

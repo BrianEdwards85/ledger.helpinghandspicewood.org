@@ -5,6 +5,14 @@
             :serialize :date/serialize
         }
     }
+    :input-objects {
+        :EntryCategory {
+            :fields {
+                :category_id {:type (non-null String)}
+                :value {:type (non-null Int)}
+            }
+        }
+    }
     :objects {
         :User {
             :description "User"
@@ -112,6 +120,27 @@
                 :description {:type (non-null String)}
             }
             :resolve :category/upsert
+        }
+        :remove_category {
+            :type Int
+            :description "Remove category"
+            :args {
+                :id {:type (non-null String)}
+            }
+            :resolve :category/remove
+
+        }
+        :add_entry {
+            :type String
+            :description "Add client entry"
+            :args {
+                :group_id {:type String}
+                :effective_date {:type (non-null :Date)}
+                :client_id {:type (non-null String)}
+                :food {:type (non-null Boolean)}
+                :categories {:type (list :EntryCategory)}
+            }
+            :resolve :entry/add
         }
     }
 }

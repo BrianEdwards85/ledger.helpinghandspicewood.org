@@ -18,3 +18,10 @@
   {:pre [(s/valid? ::db/db db)]}
   (d/future
     (upsert-category-sql (get-connection db) category)))
+
+(defn archive-category [db category-id user-id]
+  {:pre [(s/valid? ::db/db db)]}
+  (d/future
+    (archive-category-sql
+      (get-connection db)
+      {:category_id category-id :removed_by user-id})))
