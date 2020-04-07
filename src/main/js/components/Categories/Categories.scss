@@ -1,0 +1,13 @@
+#categories-display-headder {
+  display: flex;
+  flex-direction: row;
+
+  h1 {
+    align-self: flex-start;
+    flex-grow: 8
+  }
+
+  button {
+    align-self: center;
+  }
+}

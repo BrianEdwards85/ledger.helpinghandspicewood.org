@@ -35,6 +35,7 @@ const CreateClient = ({name, onCancel, addClient, isAlertOpen}) => {
       canEscapeKeyCancel={true}
       canOutsideClickCancel={true}
       isOpen={isAlertOpen}
+      onOpened={() => setFamily(1)}
       icon="insert"
       intent="success"
       onCancel={onCancel}
