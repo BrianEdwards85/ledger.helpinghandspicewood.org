@@ -75,24 +75,31 @@ const AddCategory = ({addCatagory, isAddCatagoryOpen, onCancel}) => {
   );
 };
 
-const Category = ({category, upsertCategory}) => {
+const Category = ({category, upsertCategory, removeCategory}) => {
   const [edit, setEdit] = useState(false);
-
   const props = {...category, edit, setEdit, upsertCategory};
+  const remove = () => removeCategory(category.id);
   return (
     <tr key={category.id}>
       <td>
         <CategoryDescription {...props}/>
       </td>
       <td>
-        <Button icon="edit" disabled={edit} minimal={true} small={true} intent="sucess" onClick={() => setEdit(true)}/>
-        <Button icon="trash" minimal={true} intent="warning" small={true}/>
+        <Button
+          icon="edit"
+          disabled={edit}
+          minimal={true}
+          small={true}
+          intent="sucess"
+          onClick={() => setEdit(true)}
+        />
+        <Button icon="trash" minimal={true} intent="danger" small={true} onClick={remove}/>
       </td>
     </tr>
   );
 };
 
-const CategoriesDisplay = ({categories, upsertCategory}) => {
+const CategoriesDisplay = ({categories, upsertCategory, removeCategory}) => {
   const [isAddCatagoryOpen, setAddCatagoryOpen] = useState(false);
   return (
     <React.Fragment>
@@ -129,6 +136,7 @@ const CategoriesDisplay = ({categories, upsertCategory}) => {
                   key={category.id}
                   category={category}
                   upsertCategory={upsertCategory}
+                  removeCategory={removeCategory}
                 />)
               .value()
           }

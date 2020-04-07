@@ -42,3 +42,28 @@ export const UPSERT_CATEGORIES = gql`
     upsert_category(description: $description, id: $id)
   }
 `;
+
+export const REMOVE_CATEGORY = gql`
+  mutation RemoveCategory($id: String!){
+    remove_category(id: $id)
+  }
+`;
+
+export const ADD_CLIENT_ENTRY = gql`
+  mutation AddEntry(
+    $categories: [EntryCategory],
+    $client_id: String!,
+    $effective_date: Date!,
+    $food: Boolean!,
+    $group_id: String,
+    $notes: String
+  ){
+    add_entry(
+      group_id: $group_id
+      categories: $categories,
+      client_id: $client_id,
+      effective_date: $effective_date
+      food: $food
+      notes: $notes)
+  }
+`;

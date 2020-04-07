@@ -14,6 +14,13 @@
         }
     }
     :objects {
+        :EntryValue {
+            :fields {
+                :value {:type (non-null Int)}
+                :description {:type (non-null String)}
+                :category_id {:type (non-null String)}
+            }
+        }
         :User {
             :description "User"
             :fields {
@@ -49,20 +56,21 @@
         :Entry {
             :description "Visit Entry"
             :fields {
-                :id {:type (non-null String)}
                 :group {:type (non-null String)}
                 :client {
                     :type (non-null :Client)
                     :resolve :client/for-entry
                 }
+                :group_total {:type Int}
                 :effective_date {:type (non-null :Date)}
-                :current {:type (non-null Boolean)}
                 :food {:type (non-null Boolean)}
                 :added_by {
                     :type (non-null :User)
                     :resolve :user/added_by
                 }
                 :added_on {:type (non-null :Date)}
+                :notes {:type String}
+                :values { :type (list :EntryValue) }
             }
         }
         :Category {
@@ -139,6 +147,7 @@
                 :effective_date {:type (non-null :Date)}
                 :client_id {:type (non-null String)}
                 :food {:type (non-null Boolean)}
+                :notes {:type String}
                 :categories {:type (list :EntryCategory)}
             }
             :resolve :entry/add

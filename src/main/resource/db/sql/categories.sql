@@ -10,7 +10,7 @@ VALUES (:id, :description, :added_by)
 ON CONFLICT (category_id) DO UPDATE
 SET description = :description, removed_by = NULL, removed_on = NULL
 
--- :name archive-category-sql :! :N
+-- :name archive-category-sql :! :n
 UPDATE ledger.categories
 SET removed_by = :removed_by, removed_on = now()
 WHERE category_id = :category_id

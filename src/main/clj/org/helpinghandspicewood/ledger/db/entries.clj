@@ -8,7 +8,7 @@
 
 (def-db-fns "db/sql/entries.sql")
 
-(defn get-current-entries-by-client [db client archived]
+(defn get-current-entries-by-clienty [db client archived]
   {:pre [(s/valid? ::db/db db)]}
   (d/future
     (map
@@ -20,14 +20,16 @@
   (d/future
     (jdbc/with-db-transaction [tx (get-connection db)]
       (add-entry-sql tx
-        (assoc
-          entry
-          :effective_date
-          (->
+        (merge
+          {:notes nil}
+          (assoc
             entry
             :effective_date
-            .toEpochMilli
-            java.sql.Date.)))
+            (->
+              entry
+              :effective_date
+              .toEpochMilli
+              java.sql.Date.))))
       (set-current-entry-sql tx (select-keys entry [:entry_id]))
       (add-entry-categories tx
         {
@@ -36,3 +38,19 @@
             (fn [{:keys [category_id value]}]
               (vector (:entry_id entry) category_id value))
             (:categories entry))}))))
+
+(defn create-entry [entry]
+  (assoc
+    (select-keys (first entry) [:group :added_by :client :group_total :effective_date :food :added_on :notes])
+    :values
+    (map #(select-keys % [:value :category_id :description]) (filter #(-> % :value some?) entry))))
+
+(defn get-current-entries-by-client [db client x]
+  {:pre [(s/valid? ::db/db db)]}
+  (d/chain
+    (d/future (get-current-entries-by-client-sqll (get-connection db) {:client_id client}))
+    #(map timestamp->instant %)
+    #(->> %
+          (group-by :group)
+          vals
+          (map create-entry))))

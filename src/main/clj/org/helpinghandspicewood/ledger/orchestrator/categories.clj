@@ -16,4 +16,4 @@
 (defn archive-category [db {:keys [id permissions]} category]
   (check-permissions permissions
                      "categories.remove"
-                     #(categories-db/upsert-category db category id)) )
+                     #(categories-db/archive-category db category id)) )

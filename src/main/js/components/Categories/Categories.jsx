@@ -1,7 +1,7 @@
 import React from 'react';
 import {useQuery, useMutation} from '@apollo/react-hooks';
 import {Spinner} from '@blueprintjs/core';
-import {ALL_CATEGORIES, UPSERT_CATEGORIES} from '../../gql';
+import {ALL_CATEGORIES, UPSERT_CATEGORIES, REMOVE_CATEGORY} from '../../gql';
 import CategoriesDisplay from './CategoriesDisplay';
 
 const Categories = () => {
@@ -9,9 +9,15 @@ const Categories = () => {
   const [upsertCategoryGql, {d}] = useMutation(
       UPSERT_CATEGORIES,
       {onCompleted: refetch});
+  const [removeCategoryGql, {e}] = useMutation(
+      REMOVE_CATEGORY,
+      {onCompleted: refetch});
 
   const upsertCategory = (id, description) =>
     upsertCategoryGql({variables: {id, description}});
+
+  const removeCategory = (id) =>
+    removeCategoryGql({variables: {id}});
 
   if (loading) return <Spinner size="125"/>;
   if (error) return <p>Error :(</p>;
@@ -19,6 +25,7 @@ const Categories = () => {
   const props = {
     ...data,
     upsertCategory,
+    removeCategory,
   };
 
   return <CategoriesDisplay {...props}/>;
