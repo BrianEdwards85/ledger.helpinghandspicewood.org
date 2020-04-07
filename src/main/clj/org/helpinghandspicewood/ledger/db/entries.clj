@@ -18,21 +18,21 @@
 (defn add-entry [db entry]
   {:pre [(s/valid? ::db/db db)]}
   (d/future
-  (jdbc/with-db-transaction [tx (get-connection db)]
-    (add-entry-sql tx
-      (assoc
-        entry
-        :effective_date
-        (->
+    (jdbc/with-db-transaction [tx (get-connection db)]
+      (add-entry-sql tx
+        (assoc
           entry
           :effective_date
-          .toEpochMilli
-          java.sql.Date.)))
-    (set-current-entry-sql tx (select-keys entry [:entry_id]))
-    (add-entry-categories tx
-      {
-        :entry_categories
-        (map
-          (fn [{:keys [category_id value]}]
-            (vector (:entry_id entry) category_id value))
-          (:categories entry))}))))
+          (->
+            entry
+            :effective_date
+            .toEpochMilli
+            java.sql.Date.)))
+      (set-current-entry-sql tx (select-keys entry [:entry_id]))
+      (add-entry-categories tx
+        {
+          :entry_categories
+          (map
+            (fn [{:keys [category_id value]}]
+              (vector (:entry_id entry) category_id value))
+            (:categories entry))}))))
