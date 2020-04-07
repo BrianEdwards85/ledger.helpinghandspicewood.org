@@ -22,8 +22,8 @@ export const ALL_CLIENTS = gql`
 `;
 
 export const ADD_CLIENT = gql`
-  mutation AddClient($name: String!){
-    add_client(name: $name)
+  mutation AddClient($name: String!, $family: Int!){
+    add_client(name: $name, family: $family)
   }
 `;
 

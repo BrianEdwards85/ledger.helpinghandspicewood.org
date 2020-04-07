@@ -12,7 +12,7 @@ const Clients = () => {
         onCompleted: refetch,
       });
 
-  const addclient = (name) => addclientGQl({variables: {name}});
+  const addclient = (name, family) => addclientGQl({variables: {name, family}});
 
   if (loading) return <Spinner size="125"/>;
   if (error) return <p>Error :(</p>;

@@ -109,6 +109,7 @@
             :description "Add client"
             :args {
                 :name {:type (non-null String)}
+                :family {:type (non-null Int)}
             }
             :resolve :client/add
         }
