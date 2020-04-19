@@ -31,14 +31,14 @@ LEFT JOIN ledger.categories on entry_categories.category_id = categories.categor
 WHERE entries.current AND entries.client_id = :client_id
 
 
--- :name entries
+-- :name get-entries-sql :? :*
 SELECT entries.entry_id as id, entries.group_id as group, entries.current,
        entries.effective_date, entries.client_id as client, entries.added_on,
        entries.added_by, entries.food, entries.notes,
        entry_categories.category_id, categories.description, entry_categories.value,
-       SUM(entry_categories.value) OVER (PARTITION BY entries.entry_id) as total
+       SUM(entry_categories.value) OVER (PARTITION BY entries.entry_id) as entry_total
 FROM ledger.entries
 LEFT JOIN ledger.entry_categories on entries.entry_id = entry_categories.entry_id
 LEFT JOIN ledger.categories on entry_categories.category_id = categories.category_id
-WHERE (entries.current AND entries.client_id = 'a63c8ae0-d190-4881-8aa7-05ee4278be6a')
- OR (entries.group_id IN ('ab654b33-98b6-498d-b3eb-e6bdbc232213'))
+WHERE (entries.current AND entries.client_id = :client_id)
+ OR entries.group_id = :group_id

@@ -4,7 +4,7 @@
     [clojure.spec.alpha :as s]
     [clojure.java.jdbc :as jdbc]
     [org.helpinghandspicewood.ledger.spec :as specs]
-    [org.helpinghandspicewood.ledger.db :refer [get-connection def-db-fns timestamp->instant] :as db]))
+    [org.helpinghandspicewood.ledger.db :refer [get-connection def-db-fns timestamp->instant bigdec->int] :as db]))
 
 (def-db-fns "db/sql/entries.sql")
 
@@ -41,16 +41,26 @@
 
 (defn create-entry [entry]
   (assoc
-    (select-keys (first entry) [:group :added_by :client :group_total :effective_date :food :added_on :notes])
+    (select-keys (first entry) [:id :current :group :added_by :client :entry_total :effective_date :food :added_on :notes])
     :values
     (map #(select-keys % [:value :category_id :description]) (filter #(-> % :value some?) entry))))
 
-(defn get-current-entries-by-client [db client x]
+(defn group-entries [client-entries]
+  (->> client-entries
+    (group-by :id)
+    vals
+    (map create-entry)))
+
+(defn get-entries [db paramaters]
   {:pre [(s/valid? ::db/db db)]}
   (d/chain
-    (d/future (get-current-entries-by-client-sqll (get-connection db) {:client_id client}))
+    (d/future (get-entries-sql (get-connection db) paramaters))
     #(map timestamp->instant %)
-    #(->> %
-          (group-by :group)
-          vals
-          (map create-entry))))
+    #(map bigdec->int %)
+    group-entries))
+
+(defn get-current-entries-by-client [db client]
+  (get-entries db {:client_id client :group_id nil}))
+
+(defn get-entries-by-group [db group]
+  (get-entries db {:client_id nil :group_id group}))

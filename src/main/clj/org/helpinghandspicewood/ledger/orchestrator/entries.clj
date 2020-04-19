@@ -9,7 +9,11 @@
   ([db user client] (get-client-entries db user client false))
   ([db {:keys [permissions]} client archived]
   (check-permissions permissions "entries.list"
-    #(entries-db/get-current-entries-by-client db client archived))))
+    #(entries-db/get-current-entries-by-client db client))))
+
+(defn get-group-entries [db {:keys [permissions]} group]
+  (check-permissions permissions "entries.list"
+    #(entries-db/get-entries-by-group db group)))
 
 (defn add-entry [db {:keys [id permissions]} entry]
   (check-permissions permissions "entries.add"

@@ -53,6 +53,16 @@
 (defn def-db-fns [f]
     (hugsql/def-db-fns f {:adapter (adapter/hugsql-adapter-clojure-java-jdbc)}))
 
+(defn bigdec->int [e]
+    (apply
+        hash-map
+        (mapcat
+            (fn [[k v]]
+                (if (instance? java.math.BigDecimal v)
+                    [k (.intValue v)]
+                    [k v]))
+            e)))
+
 (defn timestamp->instant [e]
     (apply
         hash-map

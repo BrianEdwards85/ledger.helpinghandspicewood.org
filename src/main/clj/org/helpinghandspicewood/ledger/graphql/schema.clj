@@ -2,6 +2,7 @@
   (:require
     [clojure.java.io :as io]
     [manifold.deferred :as d]
+    [clojure.tools.logging :as log]
     [org.helpinghandspicewood.ledger.db.users :as users]
     [org.helpinghandspicewood.ledger.orchestrator.clients :as clients]
     [org.helpinghandspicewood.ledger.orchestrator.entries :as entries]
@@ -48,7 +49,9 @@
       (d/on-realized
           (resolver (merge system context {:variables variables :value value}))
           #(resolve/deliver! result %)
-          #(resolve/deliver! result nil {:message (str %)}))
+          #(do
+            (log/warn % "Exception resolving")
+            (resolve/deliver! result nil {:message (str %)})))
         result)))
 
 (def PARSER java.time.format.DateTimeFormatter/ISO_INSTANT)
@@ -67,7 +70,7 @@
 
 (defn client-for-entry [{:keys [db user value]}]
   (d/chain
-    (clients/add-client db user (list (:client value)))
+    (clients/get-clients db user (list (:client value)))
     first))
 
 (defn resolver-map [system]
@@ -80,6 +83,7 @@
     :client/add (resolve (fn [{:keys [db user variables]}] (clients/add-client db user variables)))
     :client/for-entry (resolve client-for-entry)
     :entry/for-client (resolve (fn [{:keys [db user value]}] (entries/get-client-entries db user (:id value))))
+    :entry/group (resolve (fn [{:keys [db user variables]}] (entries/get-group-entries db user (:group variables))))
     :category/get (resolve (fn [{:keys [db user variables]}] (categories/get-categories db user (-> variables :archived true?))))
     :category/upsert (resolve (fn [{:keys [db user variables]}] (categories/upsert-category db user variables)))
     :category/remove (resolve (fn [{:keys [db user variables]}] (categories/archive-category db user (:id variables))))

@@ -56,12 +56,14 @@
         :Entry {
             :description "Visit Entry"
             :fields {
+                :id {:type (non-null String)}
                 :group {:type (non-null String)}
+                :current {:type (non-null Boolean)}
                 :client {
                     :type (non-null :Client)
                     :resolve :client/for-entry
                 }
-                :group_total {:type Int}
+                :entry_total {:type Int}
                 :effective_date {:type (non-null :Date)}
                 :food {:type (non-null Boolean)}
                 :added_by {
@@ -108,6 +110,14 @@
             :resolve :category/get
             :args {
                 :archived {:type Boolean}
+            }
+        }
+        :group_entries {
+            :type (list :Entry)
+            :description "Entires for entry group"
+            :resolve :entry/group
+            :args {
+                :group {:type String}
             }
         }
     }
