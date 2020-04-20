@@ -67,3 +67,27 @@ export const ADD_CLIENT_ENTRY = gql`
       notes: $notes)
   }
 `;
+
+export const GET_CLIENTS = gql`
+  query Client($ids: [String]){
+    clients(ids: $ids){
+      id
+      name
+      family
+      added_on
+      entries{
+        id
+        current
+        group
+        food
+        effective_date
+        entry_total
+        values{
+          value
+          description
+          category_id
+        }
+      }
+    }
+  }
+`;

@@ -22,6 +22,7 @@
                                                                   (q graphql body ctx)))}}})]
          ["/jwt" (yada/resource {:methods {:get {:produces #{"application/json"}
                                                  :response (authorize #(select-keys % [:token :user :permissions]))}}})]
+;;         ["/" (new-classpath-resource "public")]
          [true (yada/resource {:methods {:get {:produces #{"text/html"}
                                                :response (authorize index)}}})]]]))
 
