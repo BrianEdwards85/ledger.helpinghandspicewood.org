@@ -23,6 +23,9 @@ module.exports = {
   ],
   'rules': {
     'require-jsdoc': 'off',
-    'react/prop-types': 'off'
+    'react/prop-types': 'off',
+    'camelcase': 'off',
+    'max-len': ["error", { "code": 120 }],
+    "indent": ["error", 4],
   },
 };

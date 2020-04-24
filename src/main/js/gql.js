@@ -82,6 +82,7 @@ export const GET_CLIENTS = gql`
         food
         effective_date
         entry_total
+        notes
         values{
           value
           description

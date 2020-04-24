@@ -1,0 +1,6 @@
+#client_entries > thead > tr > th:not(:first-child) {
+  text-align: center;
+}
+#client_entries > tbody > tr > td:not(:first-child) {
+  text-align: center;
+}

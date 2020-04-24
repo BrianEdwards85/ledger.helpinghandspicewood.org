@@ -6,18 +6,18 @@ import {GET_CLIENTS} from '../../gql';
 import ClientDisplay from './ClientDisplay';
 
 const Client = () => {
-  const {client} = useParams();
-  const variables = {ids: [client]};
-  const {loading, error, data, refetch} = useQuery(GET_CLIENTS, {variables});
+    const {client} = useParams();
+    const variables = {ids: [client]};
+    const {loading, error, data, refetch} = useQuery(GET_CLIENTS, {variables});
 
-  if (loading) return <Spinner size="125"/>;
-  if (error) return <p>Error :(</p>;
+    if (loading) return <Spinner size="125"/>;
+    if (error) return <p>Error :(</p>;
 
-  const {clients} = data;
+    const {clients} = data;
 
-  if (clients.length === 0) return <h1>Client not found</h1>;
+    if (clients.length === 0) return <h1>Client not found</h1>;
 
-  return <ClientDisplay client={clients[0]} />;
+    return <ClientDisplay client={clients[0]} />;
 };
 
 
