@@ -9,8 +9,9 @@ const formatter = new Intl.NumberFormat('en-US', {
 export const formatCurrency = (x) => formatter.format(x / 100);
 
 export const augumentEntry = (entry) => {
-    const {effective_date, values} = entry;
+    const {added_on, effective_date, values} = entry;
     const timestamp = Date.parse(effective_date);
+    const added_timestamp = Date.parse(added_on);
     const value_map = _.chain(values)
         .groupBy('category_id')
         .mapValues(_.head)
@@ -21,6 +22,7 @@ export const augumentEntry = (entry) => {
         ...entry,
         timestamp,
         value_map,
+        added_timestamp,
     };
 };
 

@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Icon, Button, Tooltip} from '@blueprintjs/core';
 import _ from 'lodash';
+import {useHistory} from 'react-router-dom';
 import {
     getCatagoriesAndKeys,
     renderCatagoryHeaders,
@@ -33,7 +34,8 @@ const notesButton = ({notes}) => {
         </Tooltip>
     );
 };
-const renderEntry = (catagoryKeys, entry) => {
+
+const renderEntry = (catagoryKeys, history, entry) => {
     return (
         <tr key={entry.id}>
             <td key={`${entry.id}_date`}>{entry.effective_date}</td>
@@ -44,7 +46,12 @@ const renderEntry = (catagoryKeys, entry) => {
             {renderEntryValues(catagoryKeys, entry)}
             <td key={`${entry.id}_actions`}>
                 <Tooltip content='History'>
-                    <Button icon='history' minimal={true} intent="primary"/>
+                    <Button
+                        icon='history'
+                        minimal={true}
+                        intent="primary"
+                        onClick={() => history.push(`/entries/${entry.group}`)}
+                    />
                 </Tooltip>
                 <Tooltip content='Edit'>
                     <Button icon='edit' minimal={true} intent="success"/>
@@ -58,6 +65,7 @@ const renderEntry = (catagoryKeys, entry) => {
 };
 
 const ClientDisplay = ({client}) => {
+    const history = useHistory();
     const {name, family} = client;
 
     const entries = _.chain(client.entries)
@@ -103,7 +111,7 @@ const ClientDisplay = ({client}) => {
                         }
                         <td key='totals_actions'></td>
                     </tr>
-                    {_.map(entries, _.partial(renderEntry, keys))}
+                    {_.map(entries, _.partial(renderEntry, keys, history))}
                 </tbody>
             </table>
         </React.Fragment>
