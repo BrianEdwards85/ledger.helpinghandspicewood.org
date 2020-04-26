@@ -117,7 +117,7 @@
             :description "Entires for entry group"
             :resolve :entry/group
             :args {
-                :group {:type String}
+                :group {:type (non-null String)}
             }
         }
     }

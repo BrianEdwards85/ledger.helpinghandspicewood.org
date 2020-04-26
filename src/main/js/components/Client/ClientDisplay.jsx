@@ -1,32 +1,15 @@
-/* eslint-disable camelcase */
 import React, {useState} from 'react';
 import {Icon, Button, Tooltip} from '@blueprintjs/core';
 import _ from 'lodash';
+import {
+    getCatagoriesAndKeys,
+    renderCatagoryHeaders,
+    renderEntryValues,
+    formatCurrency,
+    augumentEntry,
+} from '../common/entries';
 
 import './Client.scss';
-
-const augumentEntry = (entry) => {
-    const {effective_date, values} = entry;
-    const timestamp = Date.parse(effective_date);
-    const value_map = _.chain(values)
-        .groupBy('category_id')
-        .mapValues(_.head)
-        .mapValues('value')
-        .value();
-
-    return {
-        ...entry,
-        timestamp,
-        value_map,
-    };
-};
-
-const getCatagories = (entries) => _.chain(entries)
-    .flatMap('values')
-    .groupBy('category_id')
-    .mapValues(_.head)
-    .mapValues('description')
-    .value();
 
 const getTotals = (entries) => _.chain(entries)
     .flatMap('values')
@@ -57,13 +40,8 @@ const renderEntry = (catagoryKeys, entry) => {
             <td key={`${entry.id}_food`}>
                 <Icon icon={entry.food ? 'tick' : 'cross'} />
             </td>
-            <td key={`${entry.id}_total`}>{entry.entry_total}</td>
-            {_.map(catagoryKeys, (catagory) =>
-                <td key={`${entry.id}_${catagory}`}>
-                    {catagory in entry.value_map ?
-                        entry.value_map[catagory] : '-'}
-                </td>)
-            }
+            <td key={`${entry.id}_total`}>{formatCurrency(entry.entry_total)}</td>
+            {renderEntryValues(catagoryKeys, entry)}
             <td key={`${entry.id}_actions`}>
                 <Tooltip content='History'>
                     <Button icon='history' minimal={true} intent="primary"/>
@@ -86,11 +64,7 @@ const ClientDisplay = ({client}) => {
         .map(augumentEntry)
         .sortBy(['timestamp'])
         .value();
-    const catagories = getCatagories(entries);
-    const catagoryKeys = _.chain(catagories)
-        .keys()
-        .sort()
-        .value();
+    const {catagories, keys} = getCatagoriesAndKeys(entries);
     const totals = getTotals(entries);
 
     const grandTotal = _.chain(totals)
@@ -113,11 +87,7 @@ const ClientDisplay = ({client}) => {
                         <th key="date">Date</th>
                         <th key="food">Food</th>
                         <th key="total">Total</th>
-                        {_.map(catagoryKeys, (catagory) =>
-                            <th key={catagory}>
-                                {catagories[catagory]}
-                            </th>)
-                        }
+                        {renderCatagoryHeaders(catagories, keys)}
                         <th key="actions"><Icon icon='build'/></th>
                     </tr>
                 </thead>
@@ -125,15 +95,15 @@ const ClientDisplay = ({client}) => {
                     <tr key='totals'>
                         <td key='totals'>Total</td>
                         <td key='totals_empty'></td>
-                        <td key='grand_total'>{grandTotal}</td>
-                        {_.map(catagoryKeys, (catagory) =>
+                        <td key='grand_total'>{formatCurrency(grandTotal)}</td>
+                        {_.map(keys, (catagory) =>
                             <td key={`${catagory}_total`}>
-                                {totals[catagory]}
+                                {formatCurrency(totals[catagory])}
                             </td>)
                         }
                         <td key='totals_actions'></td>
                     </tr>
-                    {_.map(entries, _.partial(renderEntry, catagoryKeys))}
+                    {_.map(entries, _.partial(renderEntry, keys))}
                 </tbody>
             </table>
         </React.Fragment>

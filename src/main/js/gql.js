@@ -92,3 +92,32 @@ export const GET_CLIENTS = gql`
     }
   }
 `;
+
+export const GET_ENTRY_HISTORY = gql`
+  query EntryHistory($group: String!){
+    group_entries(group: $group){
+      added_by {
+        id
+        name
+        email
+      }
+      added_on
+      client {
+        id
+        name
+      }
+      current
+      effective_date
+      entry_total
+      food
+      group
+      id
+      notes
+      values {
+        category_id
+        description
+        value
+      }
+    }
+  }
+`;
